@@ -12,7 +12,6 @@ import java.util.List;
 class ReserveTest {
 
 	private EventStore eventStore;
-	private List<Object> givenEvents;
 	private List<Object> publishedEvents;
 
 	@Test
@@ -35,7 +34,6 @@ class ReserveTest {
 	}
 
 	private void given(List<Object> events) {
-		this.givenEvents = events;
 		this.publishedEvents = new ArrayList<>();
 
 		this.eventStore = new EventStore();
@@ -43,12 +41,11 @@ class ReserveTest {
 		this.eventStore.addEvents(events);
 	}
 
-	private void when(ReserveCommand commad) {
+	private void when(ReserveCommand command) {
 		ReserveHandler handler = new ReserveHandler(this.eventStore, (events) -> {
 			this.publishedEvents.addAll(events);
 		});
 
-		ReserveCommand command = new ReserveCommand("roby", Arrays.asList(new Seat(1, 2), new Seat(1, 3)));
 		handler.handle(command);
 	}
 
