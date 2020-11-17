@@ -20,6 +20,7 @@ public class Screening {
 
 			this.publisher.accept(events);
 		} else {
+			// TODO rtassi: we can publish a domain event for tracking failed reservations
 			throw new UnreservableSeatException();
 		}
 	}
