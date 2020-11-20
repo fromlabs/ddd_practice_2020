@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class ScreeningState {
 	private final Map<Seat, String> seats = new HashMap<>();
+	private ScreeningTime screeningTime;
 
 	public ScreeningState(List<Object> events) {
 		for (Object event : events) {
@@ -16,13 +17,26 @@ public class ScreeningState {
 	}
 
 	private void apply(Object event) {
-		if (event instanceof SeatingCreated) {
-			this.seats.put(((SeatingCreated) event).getSeat(), null);
-		} else if (event instanceof SeatReserved) {
-			this.seats.put(((SeatReserved) event).getSeat(), ((SeatReserved) event).getCustomerId());
+		if (event instanceof ScreeningCreated) {
+			ScreeningCreated screeningCreated = (ScreeningCreated) event;
+			this.screeningTime = screeningCreated.getScreeningTime();
+			for (Seat seat : screeningCreated.getSeats()) {
+				this.seats.put(seat, null);
+			}
+		} else if (event instanceof SeatsReserved) {
+			SeatsReserved seatsReserved = (SeatsReserved) event;
+			for (Seat seat : seatsReserved.getSeats()) {
+				this.seats.put(seat, seatsReserved.getCustomerId());
+			}
+		} else if (event instanceof ReservationFailed) {
+			//
 		} else {
-			throw new UnsupportedOperationException();
+			throw new UnsupportedOperationException("Event: " + event);
 		}
+	}
+
+	public ScreeningTime getScreeningTime() {
+		return this.screeningTime;
 	}
 
 	public Set<Seat> getAvailableSeats() {

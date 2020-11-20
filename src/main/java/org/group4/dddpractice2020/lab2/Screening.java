@@ -1,8 +1,9 @@
 package org.group4.dddpractice2020.lab2;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class Screening {
 
@@ -15,13 +16,14 @@ public class Screening {
 	}
 
 	public void reserveSeats(String customerId, List<Seat> requestedSeats) {
-		if (this.screeningState.getAvailableSeats().containsAll(requestedSeats)) {
-			List<Object> events = requestedSeats.stream().map(seat -> new SeatReserved(customerId, seat)).collect(Collectors.toList());
+		LocalDateTime reservationTime = LocalDateTime.now();
 
-			this.publisher.accept(events);
+		if (reservationTime.isAfter(this.screeningState.getScreeningTime().getDateTime().minusMinutes(15))) {
+			this.publisher.accept(Arrays.asList(new ReservationFailed()));
+		} else if (this.screeningState.getAvailableSeats().containsAll(requestedSeats)) {
+			this.publisher.accept(Arrays.asList(new SeatsReserved(customerId, requestedSeats.toArray(new Seat[0]))));
 		} else {
-			// TODO rtassi: we can publish a domain event for tracking failed reservations
-			throw new UnreservableSeatException();
+			this.publisher.accept(Arrays.asList(new ReservationFailed()));
 		}
 	}
 }

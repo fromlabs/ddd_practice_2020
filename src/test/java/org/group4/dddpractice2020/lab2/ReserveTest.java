@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,29 +17,51 @@ class ReserveTest {
 
 	@Test
 	void reserveOk() {
-		given(Arrays.asList(new SeatingCreated(new Seat(1, 1)), new SeatingCreated(new Seat(1, 2)), new SeatingCreated(new Seat(1, 3)), new SeatingCreated(new Seat(1, 4))));
+		LocalDateTime screeningDateTime = LocalDateTime.now().minusMinutes(100);
+
+		given(new ScreeningCreated(new ScreeningTime(screeningDateTime.toLocalDate(), screeningDateTime.getHour(), screeningDateTime.getMinute()),
+				Arrays.asList(new Seat(1, 1), new Seat(1, 2),
+						new Seat(1, 3), new Seat(1, 4)))
+		);
 
 		when(new ReserveCommand("roby", Arrays.asList(new Seat(1, 2), new Seat(1, 3))));
 
-		thenExpect(Arrays.asList(new SeatReserved("roby", new Seat(1, 2)), new SeatReserved("roby", new Seat(1, 3))));
+		thenExpect(new SeatsReserved("roby", new Seat(1, 2), new Seat(1, 3)));
 	}
 
 	@Test
 	void reserveNotAvailableSeats() {
-		given(Arrays.asList(new SeatingCreated(new Seat(1, 1)), new SeatingCreated(new Seat(1, 2)),
-				new SeatingCreated(new Seat(1, 3)), new SeatingCreated(new Seat(1, 4)),
-				new SeatReserved("roby", new Seat(1, 2))
-		));
+		LocalDateTime screeningDateTime = LocalDateTime.now().minusMinutes(100);
 
-		Assertions.assertThrows(UnreservableSeatException.class, () -> when(new ReserveCommand("roby", Arrays.asList(new Seat(1, 2), new Seat(1, 3)))));
+		given(new ScreeningCreated(new ScreeningTime(screeningDateTime.toLocalDate(), screeningDateTime.getHour(), screeningDateTime.getMinute()),
+				Arrays.asList(new Seat(1, 1), new Seat(1, 2),
+						new Seat(1, 3), new Seat(1, 4))), new SeatsReserved("rony", new Seat(1, 2)));
+
+		when(new ReserveCommand("roby", Arrays.asList(new Seat(1, 2), new Seat(1, 3))));
+
+		thenExpect(new ReservationFailed());
 	}
 
-	private void given(List<Object> events) {
+	@Test
+	void reserveLate() {
+		LocalDateTime screeningDateTime = LocalDateTime.now().plusMinutes(10);
+
+		given(new ScreeningCreated(new ScreeningTime(screeningDateTime.toLocalDate(), screeningDateTime.getHour(), screeningDateTime.getMinute()),
+				Arrays.asList(new Seat(1, 1), new Seat(1, 2),
+						new Seat(1, 3), new Seat(1, 4)))
+		);
+
+		when(new ReserveCommand("roby", Arrays.asList(new Seat(1, 2), new Seat(1, 3))));
+
+		thenExpect(new ReservationFailed());
+	}
+
+	private void given(Object... events) {
 		this.publishedEvents = new ArrayList<>();
 
 		this.eventStore = new EventStore();
 
-		this.eventStore.addEvents(events);
+		this.eventStore.addEvents(Arrays.asList(events));
 	}
 
 	private void when(ReserveCommand command) {
@@ -49,7 +72,7 @@ class ReserveTest {
 		handler.handle(command);
 	}
 
-	private void thenExpect(List<Object> events) {
-		Assertions.assertTrue(this.publishedEvents.containsAll(events));
+	private void thenExpect(Object... events) {
+		Assertions.assertTrue(this.publishedEvents.containsAll(Arrays.asList(events)));
 	}
 }
