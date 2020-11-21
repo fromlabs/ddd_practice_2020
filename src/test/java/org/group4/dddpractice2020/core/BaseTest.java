@@ -9,35 +9,35 @@ import org.junit.jupiter.api.BeforeEach;
 
 public abstract class BaseTest {
 
-  private List<DomainEvent> historyEvents;
+  private EventStore eventStore;
   private List<DomainEvent> publishedEvents;
   private DomainQueryResponse queryResponse;
 
   @BeforeEach
   void setup() {
-    this.historyEvents = new ArrayList<>();
+    this.eventStore = new EventStoreImpl();
     this.publishedEvents = new ArrayList<>();
     this.queryResponse = null;
   }
 
   protected BaseCommandHandler commandHandlerFactory(
-      List<DomainEvent> historyEvents, Consumer<DomainEvent> publisher) {
+      EventStore eventStore, Consumer<DomainEvent> publisher) {
     throw new UnsupportedOperationException("Provide a CommandHandler factory");
   }
 
   protected BaseQueryHandler queryHandlerFactory(
-      List<DomainEvent> historyEvents, Consumer<DomainQueryResponse> responder) {
+      EventStore eventStore, Consumer<DomainQueryResponse> responder) {
     throw new UnsupportedOperationException("Provide a QueryHandler factory");
   }
 
   protected void given(DomainEvent... events) {
-    this.historyEvents = new ArrayList<>(Arrays.asList(events));
+    this.eventStore = new EventStoreImpl(events);
   }
 
   protected void whenCommand(DomainCommand command) {
     BaseCommandHandler handler =
         commandHandlerFactory(
-            this.historyEvents,
+            this.eventStore,
             (event) -> {
               this.publishedEvents.add(event);
             });
@@ -48,7 +48,7 @@ public abstract class BaseTest {
   protected void whenQuery(DomainQuery query) {
     BaseQueryHandler handler =
         queryHandlerFactory(
-            this.historyEvents,
+            this.eventStore,
             (response) -> {
               this.queryResponse = response;
             });

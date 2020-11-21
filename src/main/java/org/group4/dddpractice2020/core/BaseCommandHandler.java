@@ -1,26 +1,26 @@
 package org.group4.dddpractice2020.core;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class BaseCommandHandler {
-  private final List<DomainEvent> historyEvents;
+  private final EventStore eventStore;
   private final Consumer<DomainEvent> publisher;
 
-  public BaseCommandHandler(List<DomainEvent> historyEvents, Consumer<DomainEvent> publisher) {
-    this.historyEvents = historyEvents;
+  public BaseCommandHandler(EventStore eventStore, Consumer<DomainEvent> publisher) {
+    this.eventStore = eventStore;
     this.publisher =
         event -> {
-          historyEvents.add(event);
+          this.eventStore.add(event);
 
+          // TODO rtassi: move in the event store
           publisher.accept(event);
         };
   }
 
   public abstract void handle(DomainCommand command);
 
-  protected List<DomainEvent> getHistoryEvents() {
-    return this.historyEvents;
+  protected Iterable<DomainEvent> getHistoryEvents() {
+    return this.eventStore.getHistoryEvents();
   }
 
   protected Consumer<DomainEvent> getPublisher() {

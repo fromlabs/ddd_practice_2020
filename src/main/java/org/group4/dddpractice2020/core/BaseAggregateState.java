@@ -1,15 +1,11 @@
 package org.group4.dddpractice2020.core;
 
-import java.util.List;
-
 public abstract class BaseAggregateState {
 
-  public BaseAggregateState(List<DomainEvent> historyEvents) {
+  public BaseAggregateState(Iterable<DomainEvent> historyEvents) {
     init();
 
-    for (DomainEvent event : historyEvents) {
-      apply(event);
-    }
+    historyEvents.forEach(this::apply);
   }
 
   protected abstract void init();

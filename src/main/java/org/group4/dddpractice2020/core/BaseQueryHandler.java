@@ -1,22 +1,20 @@
 package org.group4.dddpractice2020.core;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class BaseQueryHandler {
-  private final List<DomainEvent> historyEvents;
+  private final EventStore eventStore;
   private final Consumer<DomainQueryResponse> responder;
 
-  public BaseQueryHandler(
-      List<DomainEvent> historyEvents, Consumer<DomainQueryResponse> responder) {
-    this.historyEvents = historyEvents;
+  public BaseQueryHandler(EventStore eventStore, Consumer<DomainQueryResponse> responder) {
+    this.eventStore = eventStore;
     this.responder = responder;
   }
 
   public abstract void handle(DomainQuery query);
 
-  protected List<DomainEvent> getHistoryEvents() {
-    return this.historyEvents;
+  protected Iterable<DomainEvent> getHistoryEvents() {
+    return this.eventStore.getHistoryEvents();
   }
 
   protected void respond(DomainQueryResponse response) {

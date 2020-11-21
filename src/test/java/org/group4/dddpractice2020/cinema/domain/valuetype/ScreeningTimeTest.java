@@ -1,11 +1,10 @@
-package org.group4.dddpractice2020.cinema;
+package org.group4.dddpractice2020.cinema.domain.valuetype;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.Month;
 import lombok.extern.log4j.Log4j2;
-import org.group4.dddpractice2020.cinema.domain.valuetype.ScreeningTime;
 import org.junit.jupiter.api.Test;
 
 @Log4j2

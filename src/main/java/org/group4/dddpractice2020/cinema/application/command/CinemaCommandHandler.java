@@ -1,16 +1,16 @@
 package org.group4.dddpractice2020.cinema.application.command;
 
-import java.util.List;
 import java.util.function.Consumer;
 import org.group4.dddpractice2020.cinema.domain.aggregate.Screening;
 import org.group4.dddpractice2020.cinema.domain.aggregate.ScreeningState;
 import org.group4.dddpractice2020.core.BaseCommandHandler;
 import org.group4.dddpractice2020.core.DomainCommand;
 import org.group4.dddpractice2020.core.DomainEvent;
+import org.group4.dddpractice2020.core.EventStore;
 
-public class CommandHandler extends BaseCommandHandler {
-  public CommandHandler(List<DomainEvent> historyEvents, Consumer<DomainEvent> publisher) {
-    super(historyEvents, publisher);
+public class CinemaCommandHandler extends BaseCommandHandler {
+  public CinemaCommandHandler(EventStore eventStore, Consumer<DomainEvent> publisher) {
+    super(eventStore, publisher);
   }
 
   @Override

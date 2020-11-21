@@ -1,16 +1,15 @@
 package org.group4.dddpractice2020.cinema.application.query;
 
-import java.util.List;
 import java.util.function.Consumer;
 import org.group4.dddpractice2020.cinema.domain.readmodel.CustomerReservations;
 import org.group4.dddpractice2020.core.BaseQueryHandler;
-import org.group4.dddpractice2020.core.DomainEvent;
 import org.group4.dddpractice2020.core.DomainQuery;
 import org.group4.dddpractice2020.core.DomainQueryResponse;
+import org.group4.dddpractice2020.core.EventStore;
 
-public class QueryHandler extends BaseQueryHandler {
-  public QueryHandler(List<DomainEvent> historyEvents, Consumer<DomainQueryResponse> responder) {
-    super(historyEvents, responder);
+public class CinemaQueryHandler extends BaseQueryHandler {
+  public CinemaQueryHandler(EventStore eventStore, Consumer<DomainQueryResponse> responder) {
+    super(eventStore, responder);
   }
 
   @Override

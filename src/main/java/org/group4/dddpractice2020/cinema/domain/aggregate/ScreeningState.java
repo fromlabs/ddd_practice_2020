@@ -1,7 +1,6 @@
 package org.group4.dddpractice2020.cinema.domain.aggregate;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -18,7 +17,7 @@ public class ScreeningState extends BaseAggregateState {
   private Map<Seat, String> seats;
   private ScreeningTime screeningTime;
 
-  public ScreeningState(List<DomainEvent> historyEvents) {
+  public ScreeningState(Iterable<DomainEvent> historyEvents) {
     super(historyEvents);
   }
 

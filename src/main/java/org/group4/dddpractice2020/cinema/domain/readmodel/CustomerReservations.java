@@ -13,7 +13,7 @@ import org.group4.dddpractice2020.core.DomainEvent;
 public class CustomerReservations extends BaseReadModel {
   private Map<String, List<Reservation>> reservations;
 
-  public CustomerReservations(List<DomainEvent> historyEvents) {
+  public CustomerReservations(Iterable<DomainEvent> historyEvents) {
     super(historyEvents);
   }
 
