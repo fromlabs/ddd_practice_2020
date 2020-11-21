@@ -2,7 +2,7 @@ package org.group4.dddpractice2020.core;
 
 import java.util.function.Consumer;
 
-public abstract class BaseQueryHandler {
+public abstract class BaseQueryHandler implements DomainQueryHandler {
   private final EventStore eventStore;
   private final Consumer<DomainQueryResponse> responder;
 
@@ -11,6 +11,7 @@ public abstract class BaseQueryHandler {
     this.responder = responder;
   }
 
+  @Override
   public abstract void handle(DomainQuery query);
 
   protected Iterable<DomainEvent> getHistoryEvents() {

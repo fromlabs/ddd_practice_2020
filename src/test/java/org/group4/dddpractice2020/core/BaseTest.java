@@ -20,12 +20,12 @@ public abstract class BaseTest {
     this.queryResponse = null;
   }
 
-  protected BaseCommandHandler commandHandlerFactory(
+  protected DomainCommandHandler commandHandlerFactory(
       EventStore eventStore, Consumer<DomainEvent> publisher) {
     throw new UnsupportedOperationException("Provide a CommandHandler factory");
   }
 
-  protected BaseQueryHandler queryHandlerFactory(
+  protected DomainQueryHandler queryHandlerFactory(
       EventStore eventStore, Consumer<DomainQueryResponse> responder) {
     throw new UnsupportedOperationException("Provide a QueryHandler factory");
   }
@@ -35,7 +35,7 @@ public abstract class BaseTest {
   }
 
   protected void whenCommand(DomainCommand command) {
-    BaseCommandHandler handler =
+    DomainCommandHandler handler =
         commandHandlerFactory(
             this.eventStore,
             (event) -> {
@@ -46,7 +46,7 @@ public abstract class BaseTest {
   }
 
   protected void whenQuery(DomainQuery query) {
-    BaseQueryHandler handler =
+    DomainQueryHandler handler =
         queryHandlerFactory(
             this.eventStore,
             (response) -> {

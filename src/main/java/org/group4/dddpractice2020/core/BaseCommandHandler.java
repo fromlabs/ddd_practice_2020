@@ -2,7 +2,7 @@ package org.group4.dddpractice2020.core;
 
 import java.util.function.Consumer;
 
-public abstract class BaseCommandHandler {
+public abstract class BaseCommandHandler implements DomainCommandHandler {
   private final EventStore eventStore;
   private final Consumer<DomainEvent> publisher;
 
@@ -12,11 +12,11 @@ public abstract class BaseCommandHandler {
         event -> {
           this.eventStore.add(event);
 
-          // TODO rtassi: move in the event store
           publisher.accept(event);
         };
   }
 
+  @Override
   public abstract void handle(DomainCommand command);
 
   protected Iterable<DomainEvent> getHistoryEvents() {

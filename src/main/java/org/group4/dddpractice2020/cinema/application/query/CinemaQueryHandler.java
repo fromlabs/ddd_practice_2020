@@ -22,6 +22,7 @@ public class CinemaQueryHandler extends BaseQueryHandler {
   }
 
   private void handleCustomerReservationQuery(CustomerReservationQuery query) {
+    // TODO rtassi: the read model is created from scratch
     CustomerReservations model = new CustomerReservations(getHistoryEvents());
 
     respond(new CustomerReservationResponse(model.getCustomerReservations(query.getCustomerId())));

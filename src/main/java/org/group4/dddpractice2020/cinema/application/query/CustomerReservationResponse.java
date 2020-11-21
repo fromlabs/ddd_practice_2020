@@ -7,5 +7,5 @@ import org.group4.dddpractice2020.core.DomainQueryResponse;
 
 @Value
 public class CustomerReservationResponse implements DomainQueryResponse {
-  List<Reservation> seats;
+  List<Reservation> reservations;
 }

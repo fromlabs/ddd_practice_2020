@@ -13,8 +13,8 @@ import org.group4.dddpractice2020.cinema.domain.event.SeatsReserved;
 import org.group4.dddpractice2020.cinema.domain.valuetype.Reservation;
 import org.group4.dddpractice2020.cinema.domain.valuetype.ScreeningTime;
 import org.group4.dddpractice2020.cinema.domain.valuetype.Seat;
-import org.group4.dddpractice2020.core.BaseQueryHandler;
 import org.group4.dddpractice2020.core.BaseTest;
+import org.group4.dddpractice2020.core.DomainQueryHandler;
 import org.group4.dddpractice2020.core.DomainQueryResponse;
 import org.group4.dddpractice2020.core.EventStore;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 class QueryTest extends BaseTest {
 
   @Override
-  protected BaseQueryHandler queryHandlerFactory(
+  protected DomainQueryHandler queryHandlerFactory(
       EventStore eventStore, Consumer<DomainQueryResponse> responder) {
     return new CinemaQueryHandler(eventStore, responder);
   }

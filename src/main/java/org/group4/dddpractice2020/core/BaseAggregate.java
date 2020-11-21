@@ -16,6 +16,8 @@ public class BaseAggregate<AS extends BaseAggregateState> {
   }
 
   protected void apply(DomainEvent event) {
+    this.aggregateState.apply(event);
+
     this.publisher.accept(event);
   }
 }
