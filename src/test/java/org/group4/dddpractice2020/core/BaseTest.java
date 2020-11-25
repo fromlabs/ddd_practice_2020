@@ -1,5 +1,6 @@
 package org.group4.dddpractice2020.core;
 
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,11 +8,12 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
-public abstract class BaseTest {
+public abstract class BaseTest<M extends BaseReadModel> {
 
   private EventStore eventStore;
   private List<DomainEvent> publishedEvents;
   private DomainQueryResponse queryResponse;
+  private M readModel;
 
   @BeforeEach
   void setup() {
@@ -25,13 +27,18 @@ public abstract class BaseTest {
     throw new UnsupportedOperationException("Provide a CommandHandler factory");
   }
 
+  protected M createReadModel(Iterable<DomainEvent> events) {
+    throw new UnsupportedOperationException("Provide a ReadModel factory");
+  }
+
   protected DomainQueryHandler queryHandlerFactory(
-      EventStore eventStore, Consumer<DomainQueryResponse> responder) {
+      M readModel, EventStore eventStore, Consumer<DomainQueryResponse> responder) {
     throw new UnsupportedOperationException("Provide a QueryHandler factory");
   }
 
   protected void given(DomainEvent... events) {
     this.eventStore = new EventStoreImpl(events);
+    this.readModel = createReadModel(Lists.newArrayList(events));
   }
 
   protected void whenCommand(DomainCommand command) {
@@ -40,6 +47,7 @@ public abstract class BaseTest {
             this.eventStore,
             (event) -> {
               this.publishedEvents.add(event);
+              this.readModel.apply(event);
             });
 
     handler.handle(command);
@@ -48,6 +56,7 @@ public abstract class BaseTest {
   protected void whenQuery(DomainQuery query) {
     DomainQueryHandler handler =
         queryHandlerFactory(
+            this.readModel,
             this.eventStore,
             (response) -> {
               this.queryResponse = response;

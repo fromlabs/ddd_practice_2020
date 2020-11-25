@@ -7,9 +7,12 @@ import org.group4.dddpractice2020.core.DomainQuery;
 import org.group4.dddpractice2020.core.DomainQueryResponse;
 import org.group4.dddpractice2020.core.EventStore;
 
-public class CinemaQueryHandler extends BaseQueryHandler {
-  public CinemaQueryHandler(EventStore eventStore, Consumer<DomainQueryResponse> responder) {
-    super(eventStore, responder);
+public class CinemaQueryHandler extends BaseQueryHandler<CustomerReservations> {
+  public CinemaQueryHandler(
+      CustomerReservations readModel,
+      EventStore eventStore,
+      Consumer<DomainQueryResponse> responder) {
+    super(readModel, eventStore, responder);
   }
 
   @Override
@@ -22,9 +25,8 @@ public class CinemaQueryHandler extends BaseQueryHandler {
   }
 
   private void handleCustomerReservationQuery(CustomerReservationQuery query) {
-    // TODO rtassi: the read model is created from scratch
-    CustomerReservations model = new CustomerReservations(getHistoryEvents());
-
-    respond(new CustomerReservationResponse(model.getCustomerReservations(query.getCustomerId())));
+    respond(
+        new CustomerReservationResponse(
+            getReadModel().getCustomerReservations(query.getCustomerId())));
   }
 }

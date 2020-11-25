@@ -3,29 +3,18 @@ package org.group4.dddpractice2020.cinema;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Consumer;
 import lombok.extern.log4j.Log4j2;
-import org.group4.dddpractice2020.cinema.application.command.CinemaCommandHandler;
 import org.group4.dddpractice2020.cinema.application.command.ReserveCommand;
+import org.group4.dddpractice2020.cinema.common.BaseCinemaTest;
 import org.group4.dddpractice2020.cinema.domain.event.ReservationFailed;
 import org.group4.dddpractice2020.cinema.domain.event.ScreeningCreated;
 import org.group4.dddpractice2020.cinema.domain.event.SeatsReserved;
 import org.group4.dddpractice2020.cinema.domain.valuetype.ScreeningTime;
 import org.group4.dddpractice2020.cinema.domain.valuetype.Seat;
-import org.group4.dddpractice2020.core.BaseTest;
-import org.group4.dddpractice2020.core.DomainCommandHandler;
-import org.group4.dddpractice2020.core.DomainEvent;
-import org.group4.dddpractice2020.core.EventStore;
 import org.junit.jupiter.api.Test;
 
 @Log4j2
-class CommandTest extends BaseTest {
-
-  @Override
-  protected DomainCommandHandler commandHandlerFactory(
-      EventStore eventStore, Consumer<DomainEvent> publisher) {
-    return new CinemaCommandHandler(eventStore, publisher);
-  }
+class CommandTest extends BaseCinemaTest {
 
   @Test
   void reserveOk() {
