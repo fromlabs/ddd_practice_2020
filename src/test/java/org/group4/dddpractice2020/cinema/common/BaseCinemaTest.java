@@ -57,9 +57,12 @@ public abstract class BaseCinemaTest extends BaseTest<CustomerReservations> {
     return new CustomerReservationQuery(customerId);
   }
 
-  public static CustomerReservationResponse responseReservationsOf(Seat... reservedSeats) {
-    return new CustomerReservationResponse(
-        Collections.singletonList(new Reservation(Lists.newArrayList(reservedSeats))));
+  public static CustomerReservationResponse responseReservations(Reservation... reservations) {
+    return new CustomerReservationResponse(Lists.newArrayList(reservations));
+  }
+
+  public static Reservation reservationOf(Seat... reservedSeats) {
+    return new Reservation(Lists.newArrayList(reservedSeats));
   }
 
   public static ReserveCommand reserveSeats(String customerId, Seat... seats) {

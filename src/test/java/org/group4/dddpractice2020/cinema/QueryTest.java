@@ -13,6 +13,6 @@ class QueryTest extends BaseCinemaTest {
 
     whenQuery(queryReservationsOf(ROBY));
 
-    thenExpectResponse(responseReservationsOf(SEAT_1_2, SEAT_1_3));
+    thenExpectResponse(responseReservations(reservationOf(SEAT_1_2, SEAT_1_3)));
   }
 }

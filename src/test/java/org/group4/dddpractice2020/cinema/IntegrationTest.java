@@ -21,6 +21,14 @@ class IntegrationTest extends BaseCinemaTest {
 
     // query reservations
     whenQuery(queryReservationsOf(ROBY));
-    thenExpectResponse(responseReservationsOf(SEAT_1_2, SEAT_1_3));
+    thenExpectResponse(responseReservations(reservationOf(SEAT_1_2, SEAT_1_3)));
+
+    // reserve command
+    whenCommand(reserveSeats(ROBY, SEAT_1_4));
+
+    // query reservations
+    whenQuery(queryReservationsOf(ROBY));
+    thenExpectResponse(
+        responseReservations(reservationOf(SEAT_1_2, SEAT_1_3), reservationOf(SEAT_1_4)));
   }
 }
